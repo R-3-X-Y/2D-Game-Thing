@@ -25,6 +25,15 @@ public class WorldGenManager : MonoBehaviour
     [SerializeField] private Tilemap bgTileMap;
     
     private int[,] map;
+    private void Awake()
+    {
+        if (WorldCreationData.instance != null)
+        {
+            width = WorldCreationData.instance.width;
+            height = WorldCreationData.instance.height;
+            seed = WorldCreationData.instance.seed;
+        }
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -64,7 +73,7 @@ public class WorldGenManager : MonoBehaviour
         int perlinHeight;
         for (int x = 0; x < width; x++)
         {
-            perlinHeight = Mathf.RoundToInt(Mathf.PerlinNoise(x / smoothness, seedHash) * height / 10);
+            perlinHeight = Mathf.RoundToInt(Mathf.PerlinNoise(x / smoothness, seedHash) * 60);
             perlinHeight += height / 2;
             perlinHeightList[x] = perlinHeight;
             for (int y = 0; y < perlinHeight; y++)
@@ -137,8 +146,11 @@ public class WorldGenManager : MonoBehaviour
                 {
                     if (map[x, y + 1] == 0)
                     {
-                        groundTileMap.SetTile(new Vector3Int(x, y, 0), grassTile);
-                        bgTileMap.SetTile(new Vector3Int(x, y, 0), dirtTile);
+                        if (map[x, y - 1] == 1)
+                        {
+                            groundTileMap.SetTile(new Vector3Int(x, y, 0), grassTile);
+                            bgTileMap.SetTile(new Vector3Int(x, y, 0), dirtTile);
+                        }
                     }
                     else if (map[x, y + Random.Range(3, 6)] == 0)
                     {
@@ -153,7 +165,7 @@ public class WorldGenManager : MonoBehaviour
                     
                     if (x == Mathf.RoundToInt(width / 2))
                     {
-                        Camera.main.transform.parent.position = new Vector3(x, y + 1.5f, 0);
+                        Camera.main.transform.parent.position = new Vector3(x + 0.5f, y + 5, 0);
                     }
                 }
                 else if (map[x, y] == 2)

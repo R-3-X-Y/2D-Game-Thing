@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class tempParrticle : MonoBehaviour
+public class tempParticle : MonoBehaviour
 {
     private ParticleSystem ps;
     private void Awake()
